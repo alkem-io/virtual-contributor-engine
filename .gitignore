@@ -1,0 +1,5 @@
+.env
+/__pycache__/*
+docker-compose-local.yaml
+.DS_Store
+*.log
