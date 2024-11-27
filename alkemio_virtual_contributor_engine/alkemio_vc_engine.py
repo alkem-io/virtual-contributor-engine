@@ -9,7 +9,6 @@ from alkemio_virtual_contributor_engine.config import env
 from alkemio_virtual_contributor_engine.events.input import Input
 from alkemio_virtual_contributor_engine.events.response import Response
 from alkemio_virtual_contributor_engine.rabbitmq import RabbitMQ
-from ingest import ensure_ingested
 from logger import setup_logger
 
 
