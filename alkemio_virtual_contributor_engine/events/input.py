@@ -135,7 +135,7 @@ class Input:
             self.external_config = dict(input_data["externalConfig"])
             self.result_handler = ResultHandler(input_data["resultHandler"])
             self.persona_service_id = str(input_data["personaServiceID"])
-            self.language = str(input_data["language"])
+            self.language = input_data.get("language", "EN")
 
     def to_dict(self):
         if self.operation is InvocationOperation.INGEST:
