@@ -17,9 +17,7 @@ class Source:
         self.score = source.get("score")
         self.uri = source.get("uri")
 
-        if all(
-            [self.document_id, self.source, self.title, self.type, self.score, self.uri]
-        ):
+        if not all([self.uri]):
             raise ValueError("Missing required fields in source dictionary")
 
     def to_dict(self):
