@@ -50,6 +50,7 @@ class Response:
         self.knowledge_language: Optional[str] = None
         self.original_result: Optional[str] = None
         self.sources: List[Source] = []
+        self.thread_id: Optional[str] = None
 
         if response is not None:
             try:
@@ -61,6 +62,7 @@ class Response:
                 self.sources = [
                     Source(source) for source in response.get("sources", [])
                 ]
+                self.thread_id = response.get("thread_id", "")
             except KeyError as e:
                 raise ValueError(f"Missing required field: {e}")
 
@@ -72,4 +74,5 @@ class Response:
             "knowledgeLanguage": self.knowledge_language,
             "originalResult": self.original_result,
             "sources": list(map(lambda source: source.to_dict(), self.sources)),
+            "thread_id": self.thread_id,
         }
