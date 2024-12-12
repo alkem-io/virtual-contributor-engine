@@ -55,10 +55,12 @@ class Response:
         if response is not None:
             try:
                 self.result = response["result"]
-                self.human_language = response["human_language"]
-                self.result_language = response["result_language"]
-                self.knowledge_language = response["knowledge_language"]
-                self.original_result = response["original_result"]
+                self.human_language = response.get("human_language", "")
+                self.result_language = response.get("result_language", "")
+                self.knowledge_language = response.get("knowledge_language", "")
+                self.original_result = response.get(
+                    "original_result", response["result"]
+                )
                 self.sources = [
                     Source(source) for source in response.get("sources", [])
                 ]
@@ -74,5 +76,5 @@ class Response:
             "knowledgeLanguage": self.knowledge_language,
             "originalResult": self.original_result,
             "sources": list(map(lambda source: source.to_dict(), self.sources)),
-            "thread_id": self.thread_id,
+            "threadId": self.thread_id,
         }
