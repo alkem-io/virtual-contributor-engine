@@ -7,7 +7,7 @@ from config import env
 
 def setup_logger(name):
     logger = logging.getLogger(name)
-    logger.setLevel(getattr(logging, env.log_level))  # Set logger level
+    logger.setLevel(env.log_level)
 
     c_handler = logging.StreamHandler(
         io.TextIOWrapper(sys.stdout.buffer, line_buffering=True)
@@ -16,15 +16,15 @@ def setup_logger(name):
         os.path.join(os.path.expanduser(env.local_path), "app.log")
     )
 
-    c_handler.setLevel(level=getattr(logging, env.log_level))
+    c_handler.setLevel(env.log_level)
     f_handler.setLevel(logging.WARNING)
 
     c_format = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        '{"time": "%(asctime)s", "name": %(name)r, "level": "%(levelname)s", "message": %(message)r}',
         "%m-%d %H:%M:%S",
     )
     f_format = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        '{"time": "%(asctime)s", "name": %(name)r, "level": "%(levelname)s", "message": %(message)r}',
         "%m-%d %H:%M:%S",
     )
 
