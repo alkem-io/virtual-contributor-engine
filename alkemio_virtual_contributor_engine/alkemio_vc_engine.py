@@ -5,11 +5,10 @@ from typing import Any
 
 from aio_pika.abc import AbstractIncomingMessage
 
-from alkemio_virtual_contributor_engine.config import env
 from alkemio_virtual_contributor_engine.events.input import Input
 from alkemio_virtual_contributor_engine.events.response import Response
 from alkemio_virtual_contributor_engine.rabbitmq import RabbitMQ
-from setup_logger import setup_logger
+from alkemio_virtual_contributor_engine.setup_logger import setup_logger
 
 
 logger = setup_logger(__name__)
