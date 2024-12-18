@@ -5,7 +5,7 @@ import aio_pika
 import aiormq
 
 from alkemio_virtual_contributor_engine.config import env
-from logger import setup_logger
+from alkemio_virtual_contributor_engine.setup_logger import setup_logger
 
 logger = setup_logger(__name__)
 

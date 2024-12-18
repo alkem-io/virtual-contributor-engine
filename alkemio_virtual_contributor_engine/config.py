@@ -28,6 +28,9 @@ class Env:
     rabbitmq_exchange: str
     rabbitmq_result_routing_key: str
 
+    log_level: str
+    local_path: str
+
     def __init__(self):
 
         # Required configurations
@@ -54,6 +57,10 @@ class Env:
         self.rabbitmq_result_queue = os.getenv("RABBITMQ_RESULT_QUEUE", "")
         self.rabbitmq_exchange = os.getenv("RABBITMQ_EVENT_BUS_EXCHANGE", "")
         self.rabbitmq_result_routing_key = os.getenv("RABBITMQ_RESULT_ROUTING_KEY", "")
+
+        self.local_path = os.getenv("LOCAL_PATH", "./")
+        self.log_level = os.getenv("LOG_LEVEL", "INFO")
+        assert self.log_level in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
 env = Env()
