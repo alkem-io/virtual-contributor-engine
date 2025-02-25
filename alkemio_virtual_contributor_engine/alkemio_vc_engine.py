@@ -1,12 +1,11 @@
 import asyncio
-from collections.abc import Callable, Coroutine
 import json
+from collections.abc import Callable, Coroutine
 from typing import Any
 
 from aio_pika.abc import AbstractIncomingMessage
 
-from alkemio_virtual_contributor_engine.events.input import Input
-from alkemio_virtual_contributor_engine.events.response import Response
+from alkemio_virtual_contributor_engine.events import Input, IngestWebsite, Response
 from alkemio_virtual_contributor_engine.rabbitmq import RabbitMQ
 from alkemio_virtual_contributor_engine.setup_logger import setup_logger
 
@@ -35,6 +34,12 @@ class AlkemioVirtualContributorEngine:
             logger.error(f"Unexpected error in engine: {e}", exc_info=True)
             raise
 
+    async def publish(self, queue, message):
+        await self.rabbitmq.publish_to_queue(queue, message)
+
+    async def consume(self, queue, callback, auto_delete=False, durable=True):
+        await self.rabbitmq.consume_queue(queue, callback, auto_delete, durable)
+
     async def invoke_handler(self, message: AbstractIncomingMessage):
         logger.info("New message received.")
         if self.handler is None:
@@ -43,10 +48,13 @@ class AlkemioVirtualContributorEngine:
             )
 
         async with message.process():
-
             try:
-                body = json.loads(json.loads(message.body.decode()))
-                input = Input(body["input"])
+                body = json.loads(message.body.decode())
+                event_type = body.get("eventType")
+                if event_type == "IngestWebsite":
+                    input = IngestWebsite(body)
+                else:
+                    input = Input(body["input"])
             except json.JSONDecodeError as e:
                 logger.error(f"Failed to parse message: {e}")
                 return
@@ -54,18 +62,26 @@ class AlkemioVirtualContributorEngine:
                 logger.exception(f"Missing required field: {e}")
                 return
 
-            response = await self.handler(input)
+            response: Response = await self.handler(input)
 
             result_message = {
                 "response": response.to_dict(),
                 "original": input.to_dict(),
             }
-            await self.rabbitmq.publish(result_message)
+            logger.info("Handler completed.")
+            try:
+                await self.rabbitmq.publish(result_message)
+            except Exception as e:
+                logger.error(e)
 
             logger.debug(f"Result published: {result_message}.")
             logger.info("Response published.")
 
     def register_handler(
-        self, handler: Callable[[Input], Coroutine[Any, Any, Response]]
+        self,
+        # the handler type should be as follows
+        # handler: Callable[[Input | IngestWebsite], Coroutine[Any, Any, Response]],
+        # for some reason it's not working hence the Any there -.-
+        handler: Callable[[Any], Coroutine[Any, Any, Response]],
     ):
         self.handler = handler
