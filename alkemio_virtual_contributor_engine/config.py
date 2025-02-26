@@ -18,6 +18,9 @@ class Env:
         rabbitmq_result_queue: The result queue name
         rabbitmq_exchange: The exchange name
         rabbitmq_result_routing_key: The routing key for results
+        db_host: The vector database host
+        db_port: The vector database port
+        db_auth_credentials: The vector database authentication credentials
     """
 
     rabbitmq_host: str
@@ -45,6 +48,8 @@ class Env:
             "RABBITMQ_RESULT_QUEUE",
             "RABBITMQ_EVENT_BUS_EXCHANGE",
             "RABBITMQ_RESULT_ROUTING_KEY",
+            "VECTOR_DB_HOST",
+            "VECTOR_DB_CREDENTIALS",
         ]
 
         missing_vars = [var for var in required_vars if not os.getenv(var)]

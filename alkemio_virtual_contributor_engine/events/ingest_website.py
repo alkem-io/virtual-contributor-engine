@@ -10,7 +10,6 @@ class IngestWebsite:
     persona_service_id: str
 
     def __init__(self, input_data: Dict[str, Any]) -> None:
-        print(input_data)
         self.base_url = input_data.get("baseUrl", "")
         self.type = input_data.get("type", "")
         self.purpose = input_data.get("purpose", "")

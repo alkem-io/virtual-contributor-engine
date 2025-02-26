@@ -29,6 +29,7 @@ class RabbitMQ:
             self.connection = await connect_robust(
                 host=self.host, login=self.username, password=self.password
             )
+            # maybe create a channel factory method - i.e. self.get_channel() which creates or reopenes a channel
             self.channel = await self.connection.channel()
             await self.channel.set_qos(prefetch_count=1)
 
@@ -76,16 +77,29 @@ class RabbitMQ:
 
     async def consume_queue(self, queue, callback, auto_delete=False, durable=True):
         if not self.channel:
+            logger.warning(
+                f"Cannot consume from queue {queue}: Channel not initialized"
+            )
             return
-        queue = await self.channel.declare_queue(
-            queue, auto_delete=auto_delete, durable=durable
-        )
-        await queue.consume(callback)
+        try:
+            queue = await self.channel.declare_queue(
+                queue, auto_delete=auto_delete, durable=durable
+            )
+            await queue.consume(callback)
+        except Exception as e:
+            logger.error(f"Failed to consume from queue {queue}")
+            logger.error(e)
+            raise
 
     async def publish_to_queue(self, queue, message):
         if not self.channel:
+            logger.warning(
+                f"Cannot consume from queue {queue}: Channel not initialized"
+            )
             return
         try:
+            if self.channel.is_closed:
+                await self.channel.reopen()
             await self.channel.default_exchange.publish(
                 Message(body=json.dumps(message).encode()), queue
             )
