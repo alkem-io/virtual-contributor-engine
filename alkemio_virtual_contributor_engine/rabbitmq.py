@@ -93,9 +93,7 @@ class RabbitMQ:
 
     async def publish_to_queue(self, queue, message):
         if not self.channel:
-            logger.warning(
-                f"Cannot consume from queue {queue}: Channel not initialized"
-            )
+            logger.warning(f"Cannot publish to queue {queue}: Channel not initialized")
             return
         try:
             if self.channel.is_closed:
