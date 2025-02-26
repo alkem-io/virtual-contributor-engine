@@ -44,7 +44,8 @@ class RabbitMQ:
             )
             await self.result_queue.bind(self.exchange, env.rabbitmq_result_routing_key)
         except (aio_pika.exceptions.AMQPError, Exception) as e:
-            logger.error(f"Failed to establish RabbitMQ connection: {e}")
+            logger.error(e)
+            logger.error(f"Failed to establish RabbitMQ connection")
             raise
 
     async def consume(self, callback):
@@ -52,7 +53,8 @@ class RabbitMQ:
             try:
                 await self.input_queue.consume(callback)
             except Exception as e:
-                logger.error(f"Error during message consumption: {e}")
+                logger.error(e)
+                logger.error(f"Error during message consumption")
                 raise
 
     async def publish(self, message):
@@ -73,7 +75,7 @@ class RabbitMQ:
             Exception,
         ) as e:
             logger.error(e)
-            logger.error(f"Failed to publish message due to a RabbitMQ error: {e}")
+            logger.error(f"Failed to publish message due to a RabbitMQ error.")
 
     async def consume_queue(self, queue, callback, auto_delete=False, durable=True):
         if not self.channel:
@@ -87,8 +89,8 @@ class RabbitMQ:
             )
             await queue.consume(callback)
         except Exception as e:
-            logger.error(f"Failed to consume from queue {queue}")
             logger.error(e)
+            logger.error(f"Failed to consume from queue {queue}")
             raise
 
     async def publish_to_queue(self, queue, message):
@@ -102,5 +104,5 @@ class RabbitMQ:
                 Message(body=json.dumps(message).encode()), queue
             )
         except Exception as e:
-            logger.error(f"Failed to publish message to queue {queue}")
             logger.error(e)
+            logger.error(f"Failed to publish message to queue {queue}")
