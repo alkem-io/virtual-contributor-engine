@@ -2,7 +2,7 @@ import logging
 import sys
 import io
 import os
-from config import env
+from alkemio_virtual_contributor_engine.config import env
 
 
 def setup_logger(name):

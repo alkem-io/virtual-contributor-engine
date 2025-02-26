@@ -17,7 +17,7 @@ language_mapping = {
 }
 
 
-# # function to retrieve language from country
+# function to retrieve language from country
 def get_language_by_code(language_code):
     """Returns the language associated with the given code. If no match is found, it returns 'English'."""
     return language_mapping.get(language_code, "English")
