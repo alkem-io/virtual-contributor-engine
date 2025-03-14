@@ -5,7 +5,12 @@ from typing import Any
 
 from aio_pika.abc import AbstractIncomingMessage
 
-from alkemio_virtual_contributor_engine.events import Input, IngestWebsite, Response
+from alkemio_virtual_contributor_engine.events import (
+    Input,
+    IngestWebsite,
+    Response,
+    IngestWebsiteResult,
+)
 from alkemio_virtual_contributor_engine.rabbitmq import RabbitMQ
 from alkemio_virtual_contributor_engine.setup_logger import setup_logger
 
@@ -62,7 +67,7 @@ class AlkemioVirtualContributorEngine:
                 logger.exception(f"Missing required field: {e}")
                 return
 
-            response: Response = await self.handler(input)
+            response: Response | IngestWebsiteResult = await self.handler(input)
 
             result_message = {
                 "response": response.to_dict(),
@@ -82,6 +87,6 @@ class AlkemioVirtualContributorEngine:
         # the handler type should be as follows
         # handler: Callable[[Input | IngestWebsite], Coroutine[Any, Any, Response]],
         # for some reason it's not working hence the Any there -.-
-        handler: Callable[[Any], Coroutine[Any, Any, Response]],
+        handler: Callable[[Any], Coroutine[Any, Any, Response | IngestWebsiteResult]],
     ):
         self.handler = handler
