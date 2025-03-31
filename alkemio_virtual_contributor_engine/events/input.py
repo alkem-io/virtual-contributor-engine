@@ -80,7 +80,7 @@ class ResultHandler:
 @dataclass
 class Input:
     engine: str
-    prompt: str
+    prompt: List[str]
     user_id: str
     message: str
     bok_id: str
@@ -123,7 +123,7 @@ class Input:
                 raise ValueError(f"Missing required fields: {missing}")
 
             self.engine = str(input_data["engine"])
-            self.prompt = str(input_data["prompt"])
+            self.prompt = input_data["prompt"]
             self.user_id = str(input_data["userID"])
             self.message = str(input_data["message"])
             self.bok_id = str(input_data["bodyOfKnowledgeID"])
