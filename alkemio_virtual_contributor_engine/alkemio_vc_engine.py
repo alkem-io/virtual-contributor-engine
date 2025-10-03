@@ -57,9 +57,10 @@ class AlkemioVirtualContributorEngine:
                 body = json.loads(message.body.decode())
                 event_type = body.get("eventType")
                 if event_type == "IngestWebsite":
-                    input = IngestWebsite(body)
+                    input = IngestWebsite(**body)
                 else:
-                    input = Input(body["input"])
+                    input = Input(**body["input"])
+
             except json.JSONDecodeError as e:
                 logger.error(f"Failed to parse message: {e}")
                 return
@@ -70,8 +71,8 @@ class AlkemioVirtualContributorEngine:
             response: Response | IngestWebsiteResult = await self.handler(input)
 
             result_message = {
-                "response": response.to_dict(),
-                "original": input.to_dict(),
+                "response": response.dict(),
+                "original": input.dict(),
             }
             logger.info("Handler completed.")
             try:

@@ -1,159 +1,65 @@
-from dataclasses import dataclass
+from .base import Base
 from enum import Enum
-from typing import Any, Dict, List
+from typing import List, Optional
+from pydantic import Field
 
-
-class ResultHandlerAction(Enum):
+class ResultHandlerAction(str, Enum):
     POST_REPLY = "postReply"
     POST_MESSAGE = "postMessage"
     NONE = "none"
 
 
-class InvocationOperation(Enum):
+class InvocationOperation(str, Enum):
     QUERY = "query"
     INGEST = "ingest"
 
 
-class MessageSenderRole(Enum):
+class MessageSenderRole(str, Enum):
     HUMAN = "human"
     ASSISTANT = "assistant"
 
+class ExternalMetadata(Base):
+    """
+    Represents external metadata for the input, specifically the thread identifier
+    used in OpenAI's assistant API to track conversation threads.
+    """
+    thread_id: Optional[str] = Field(None, alias="threadId")
 
-@dataclass
-class HistoryItem:
-    content: str
-    role: MessageSenderRole
+class ExternalConfig(Base):
+    """
+    Represents external configuration for the input, including API key, assistant ID, and model.
+    """
+    api_key: Optional[str] = Field(None, alias="apiKey")
+    assistant_id: Optional[str] = Field(None, alias="assistantId")
+    model: Optional[str] = Field(None, alias="model")
 
-    def __init__(self, item: dict):
-        if "content" not in item or "role" not in item:
-            raise ValueError("Missing required fields: content, role")
+class HistoryItem(Base):
+    content: str = Field(alias="content")
+    role: MessageSenderRole = Field(alias="role")
 
-        self.content = item["content"]
-        self.role = MessageSenderRole(item["role"])
+class RoomDetails(Base):
+    room_id: str = Field(alias="roomID")
+    thread_id: str = Field(alias="threadID")
+    communication_id: str = Field(alias="communicationID")
+    vc_interaction_id: str = Field(alias="vcInteractionID")
 
-    def to_dict(self) -> Dict[str, str | MessageSenderRole]:
-        return {"content": self.content, "role": self.role.value}
+class ResultHandler(Base):
+    action: ResultHandlerAction = Field(alias="action")
+    room_details: RoomDetails = Field(alias="roomDetails")
 
-
-@dataclass
-class RoomDetails:
-    room_id: str
-    thread_id: str
-    communication_id: str
-    interaction_id: str
-
-    def __init__(self, details: Dict[str, Any]) -> None:
-        required_fields = {"roomID", "communicationID"}
-        if not all(field in details for field in required_fields):
-            raise ValueError(
-                f"Missing required fields: {required_fields - set(details.keys())}"
-            )
-        self.room_id = details["roomID"]
-        self.thread_id = details.get("threadID", "")
-        self.communication_id = details["communicationID"]
-        self.interaction_id = details.get("vcInteractionID", "")
-
-    def to_dict(self) -> Dict[str, str]:
-        return {
-            "roomID": self.room_id,
-            "threadID": self.thread_id,
-            "communicationID": self.communication_id,
-            "vcInteractionID": self.interaction_id,
-        }
-
-
-@dataclass
-class ResultHandler:
-    action: ResultHandlerAction
-    room_details: RoomDetails
-
-    def __init__(self, config):
-        if "action" not in config or "roomDetails" not in config:
-            raise ValueError("Missing required fields: action, roomDetails")
-        self.action = ResultHandlerAction(config["action"])
-        self.room_details = RoomDetails(config["roomDetails"])
-
-    def to_dict(self) -> Dict[str, str | Dict[str, str]]:
-        return {"action": self.action.value, "roomDetails": self.room_details.to_dict()}
-
-
-@dataclass
-class Input:
-    engine: str
-    prompt: List[str]
-    user_id: str
-    message: str
-    bok_id: str
-    context_id: str
-    history: List[HistoryItem]
-    external_metadata: Dict[str, Any]
-    display_name: str
-    description: str
-    external_config: Dict[str, Any]
-    result_handler: ResultHandler
-    persona_service_id: str
-    language: str
-    operation: InvocationOperation
-
-    def __init__(self, input_data: Dict[str, Any]) -> None:
-        if not isinstance(input_data, dict):
-            raise TypeError("Expected dictionary input")
-
-        self.operation = InvocationOperation(
-            input_data.get("operation", InvocationOperation.QUERY)
-        )
-
-        if self.operation is InvocationOperation.QUERY:
-            required_fields = {
-                "engine",
-                "prompt",
-                "userID",
-                "message",
-                "bodyOfKnowledgeID",
-                # "contextID",
-                "history",
-                "externalMetadata",
-                "displayName",
-                # "description",
-                "externalConfig",
-                "resultHandler",
-                "personaServiceID",
-            }
-            if missing := required_fields - set(input_data.keys()):
-                raise ValueError(f"Missing required fields: {missing}")
-
-            self.engine = str(input_data["engine"])
-            self.prompt = input_data["prompt"]
-            self.user_id = str(input_data["userID"])
-            self.message = str(input_data["message"])
-            self.bok_id = str(input_data["bodyOfKnowledgeID"])
-            self.context_id = input_data.get("contextID", "")
-            self.history = [HistoryItem(item) for item in input_data["history"]]
-            self.external_metadata = dict(input_data["externalMetadata"])
-            self.display_name = str(input_data["displayName"])
-            self.description = input_data.get("description", "")
-            self.external_config = dict(input_data["externalConfig"])
-            self.result_handler = ResultHandler(input_data["resultHandler"])
-            self.persona_service_id = str(input_data["personaServiceID"])
-            self.language = input_data.get("language", "EN")
-
-    def to_dict(self):
-        if self.operation is InvocationOperation.INGEST:
-            return {"operation": self.operation.value}
-
-        return {
-            "engine": self.engine,
-            "prompt": self.prompt,
-            "userID": self.user_id,
-            "message": self.message,
-            "bodyOfKnowledgeID": self.bok_id,
-            "contextID": self.context_id,
-            "history": [item.to_dict() for item in self.history],
-            "externalMetadata": self.external_metadata,
-            "displayName": self.display_name,
-            "description": self.description,
-            "externalConfig": self.external_config,
-            "resultHandler": self.result_handler.to_dict(),
-            "personaServiceID": self.persona_service_id,
-            "language": self.language,
-        }
+class Input(Base):
+    engine: str = Field(alias="engine")
+    operation: InvocationOperation = Field(InvocationOperation.QUERY, alias="operation")
+    user_id: str = Field(alias="userID")
+    message: str = Field(alias="message")
+    body_of_knowledge_id: str = Field(alias="bodyOfKnowledgeID")
+    context_id: str = Field("", alias="contextID")
+    history: List[HistoryItem] = Field(alias="history")
+    external_metadata: Optional[ExternalMetadata] = Field(None, alias="externalMetadata")
+    external_config: Optional[ExternalConfig] = Field(None, alias="externalConfig")
+    display_name: str = Field(alias="displayName")
+    description: str = Field("", alias="description")
+    persona_id: str = Field(alias="personaID")
+    language: Optional[str] = Field("EN", alias="language")
+    result_handler: ResultHandler = Field(alias="resultHandler")
+    prompt_graph: Optional[dict] = Field(None, alias="promptGraph", description="PromptGraph configuration parsed from JSON")

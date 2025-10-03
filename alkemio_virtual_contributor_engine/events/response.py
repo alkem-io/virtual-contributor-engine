@@ -1,80 +1,23 @@
-from typing import Any, Dict, List, Optional
 
+from typing import List, Optional
+from pydantic import Field
+from .base import Base
 
-class Source:
-    def __init__(self, source: Dict[str, str]):
-        self.chunk_index = None
-        self.embedding_type = None
-        if "chunkIndex" in source:
-            self.chunk_index = source.get("chunkIndex")
-        if "embeddingType" in source:
-            self.embedding_type = source.get("embeddingType")
+class Source(Base):
+    chunk_index: Optional[int] = Field(None, alias="chunkIndex")
+    embedding_type: Optional[str] = Field(None, alias="embeddingType")
+    document_id: Optional[str] = Field(None, alias="documentId")
+    source: Optional[str]
+    title: Optional[str]
+    type: Optional[str]
+    score: Optional[float]
+    uri: str
 
-        self.document_id = source.get("documentId")
-        self.source = source.get("source")
-        self.title = source.get("title")
-        self.type = source.get("type")
-        self.score = source.get("score")
-        self.uri = source.get("uri")
-
-        if not all([self.uri]):
-            raise ValueError("Missing required fields in source dictionary")
-
-    def to_dict(self):
-        result = {
-            "documentId": self.document_id,
-            "source": self.source,
-            "title": self.title,
-            "type": self.type,
-            "score": self.score,
-            "uri": self.uri,
-        }
-
-        if self.chunk_index:
-            result["chunkIndex"] = self.chunk_index
-        if self.embedding_type:
-            result["embeddingType"] = self.embedding_type
-
-        return result
-
-
-class Response:
-
-    # TODO the signature should be like this but validation is too much work
-    # def __init__(self, response: Optional[Dict[str, str | List[Dict[str, str]]]] = None):
-
-    def __init__(self, response: Optional[Dict[str, Any]] = None):
-        self.result: Optional[str] = None
-        self.human_language: Optional[str] = None
-        self.result_language: Optional[str] = None
-        self.knowledge_language: Optional[str] = None
-        self.original_result: Optional[str] = None
-        self.sources: List[Source] = []
-        self.thread_id: Optional[str] = None
-
-        if response is not None:
-            try:
-                self.result = response["result"]
-                self.human_language = response.get("human_language", "")
-                self.result_language = response.get("result_language", "")
-                self.knowledge_language = response.get("knowledge_language", "")
-                self.original_result = response.get(
-                    "original_result", response["result"]
-                )
-                self.sources = [
-                    Source(source) for source in response.get("sources", [])
-                ]
-                self.thread_id = response.get("thread_id", "")
-            except KeyError as e:
-                raise ValueError(f"Missing required field: {e}")
-
-    def to_dict(self):
-        return {
-            "result": self.result,
-            "humanLanguage": self.human_language,
-            "resultLanguage": self.result_language,
-            "knowledgeLanguage": self.knowledge_language,
-            "originalResult": self.original_result,
-            "sources": list(map(lambda source: source.to_dict(), self.sources)),
-            "threadId": self.thread_id,
-        }
+class Response(Base):
+    result: Optional[str]
+    human_language: Optional[str] = Field(None, alias="humanLanguage")
+    result_language: Optional[str] = Field(None, alias="resultLanguage")
+    knowledge_language: Optional[str] = Field(None, alias="knowledgeLanguage")
+    original_result: Optional[str] = Field(None, alias="originalResult")
+    sources: List[Source] = Field(default_factory=list)
+    thread_id: Optional[str] = Field(None, alias="threadId")
