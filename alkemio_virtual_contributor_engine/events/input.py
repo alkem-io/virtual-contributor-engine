@@ -45,7 +45,7 @@ class RoomDetails(Base):
 
 class ResultHandler(Base):
     action: ResultHandlerAction = Field(alias="action")
-    room_details: RoomDetails = Field(alias="roomDetails")
+    room_details: Optional[RoomDetails] = Field(None, alias="roomDetails")
 
 class Input(Base):
     engine: str = Field(alias="engine")

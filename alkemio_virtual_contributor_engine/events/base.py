@@ -1,11 +1,12 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class Base(BaseModel):
-    class Config:
-        validate_by_name = True
-        use_enum_values = True
+    model_config = ConfigDict(
+        populate_by_name=True,
+        use_enum_values=True,
+    )
 
-    def dict(self, *args, **kwargs):
+    def model_dump(self, *args, **kwargs):
         if "by_alias" not in kwargs:
             kwargs["by_alias"] = True
-        return super().dict(*args, **kwargs)
+        return super().model_dump(*args, **kwargs)

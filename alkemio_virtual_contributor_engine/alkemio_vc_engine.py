@@ -71,8 +71,8 @@ class AlkemioVirtualContributorEngine:
             response: Response | IngestWebsiteResult = await self.handler(input)
 
             result_message = {
-                "response": response.dict(),
-                "original": input.dict(),
+                "response": response.model_dump(),
+                "original": input.model_dump(),
             }
             logger.info("Handler completed.")
             try:
