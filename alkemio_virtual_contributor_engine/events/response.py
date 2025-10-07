@@ -7,11 +7,11 @@ class Source(Base):
     chunk_index: Optional[int] = Field(None, alias="chunkIndex")
     embedding_type: Optional[str] = Field(None, alias="embeddingType")
     document_id: Optional[str] = Field(None, alias="documentId")
-    source: Optional[str]
-    title: Optional[str]
-    type: Optional[str]
-    score: Optional[float]
-    uri: str
+    source: Optional[str] = Field(None)
+    title: Optional[str] = Field(None)
+    type: Optional[str] = Field(None)
+    score: Optional[float] = Field(None)
+    uri: Optional[str] = Field(None)
 
 class Response(Base):
     result: Optional[str]

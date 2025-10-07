@@ -39,9 +39,9 @@ class HistoryItem(Base):
 
 class RoomDetails(Base):
     room_id: str = Field(alias="roomID")
-    thread_id: str = Field(alias="threadID")
     communication_id: str = Field(alias="communicationID")
-    vc_interaction_id: str = Field(alias="vcInteractionID")
+    thread_id: Optional[str] = Field(None, alias="threadID")
+    vc_interaction_id: Optional[str] = Field(None, alias="vcInteractionID")
 
 class ResultHandler(Base):
     action: ResultHandlerAction = Field(alias="action")
