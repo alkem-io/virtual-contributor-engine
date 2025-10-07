@@ -14,7 +14,7 @@ class Source(Base):
     uri: Optional[str] = Field(None)
 
 class Response(Base):
-    result: Optional[str]
+    result: Optional[str] = Field(None)
     human_language: Optional[str] = Field(None, alias="humanLanguage")
     result_language: Optional[str] = Field(None, alias="resultLanguage")
     knowledge_language: Optional[str] = Field(None, alias="knowledgeLanguage")
