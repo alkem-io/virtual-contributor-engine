@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import Field
 from .base import Base
 
+
 class Source(Base):
     chunk_index: Optional[int] = Field(None, alias="chunkIndex")
     embedding_type: Optional[str] = Field(None, alias="embeddingType")
@@ -12,6 +13,7 @@ class Source(Base):
     type: Optional[str] = Field(None)
     score: Optional[float] = Field(None)
     uri: Optional[str] = Field(None)
+
 
 class Response(Base):
     result: Optional[str] = Field(None)

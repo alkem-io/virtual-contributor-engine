@@ -27,25 +27,36 @@ class RabbitMQ:
     async def connect(self):
         try:
             self.connection = await connect_robust(
-                host=self.host, login=self.username, password=self.password
+                host=self.host,
+                login=self.username,
+                password=self.password,
             )
-            # maybe create a channel factory method - i.e. self.get_channel() which creates or reopenes a channel
+            # maybe create a channel factory method - i.e.
+            # self.get_channel() which creates or reopenes a channel
             self.channel = await self.connection.channel()
             await self.channel.set_qos(prefetch_count=1)
 
             self.input_queue = await self.channel.declare_queue(
-                self.input_queue_name, auto_delete=False, durable=True
+                self.input_queue_name,
+                auto_delete=False,
+                durable=True,
             )
             self.result_queue = await self.channel.declare_queue(
-                self.result_queue_name, auto_delete=False, durable=True
+                self.result_queue_name,
+                auto_delete=False,
+                durable=True,
             )
             self.exchange = await self.channel.declare_exchange(
-                env.rabbitmq_exchange, ExchangeType.DIRECT, durable=True
+                env.rabbitmq_exchange,
+                ExchangeType.DIRECT,
+                durable=True,
             )
-            await self.result_queue.bind(self.exchange, env.rabbitmq_result_routing_key)
+            await self.result_queue.bind(
+                self.exchange, env.rabbitmq_result_routing_key
+            )
         except (aio_pika.exceptions.AMQPError, Exception) as e:
             logger.error(e)
-            logger.error(f"Failed to establish RabbitMQ connection")
+            logger.error("Failed to establish RabbitMQ connection")
             raise
 
     async def consume(self, callback):
@@ -54,7 +65,7 @@ class RabbitMQ:
                 await self.input_queue.consume(callback)
             except Exception as e:
                 logger.error(e)
-                logger.error(f"Error during message consumption")
+                logger.error("Error during message consumption")
                 raise
 
     async def publish(self, message):
@@ -75,9 +86,13 @@ class RabbitMQ:
             Exception,
         ) as e:
             logger.error(e)
-            logger.error(f"Failed to publish message due to a RabbitMQ error.")
+            logger.error(
+                "Failed to publish message due to a RabbitMQ error."
+            )
 
-    async def consume_queue(self, queue, callback, auto_delete=False, durable=True):
+    async def consume_queue(
+        self, queue, callback, auto_delete=False, durable=True
+    ):
         if not self.channel:
             logger.warning(
                 f"Cannot consume from queue {queue}: Channel not initialized"
@@ -95,7 +110,10 @@ class RabbitMQ:
 
     async def publish_to_queue(self, queue, message):
         if not self.channel:
-            logger.warning(f"Cannot publish to queue {queue}: Channel not initialized")
+            logger.warning(
+                f"Cannot publish to queue {queue}: "
+                "Channel not initialized"
+            )
             return
         try:
             if self.channel.is_closed:
