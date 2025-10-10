@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "alkemio-virtual-contributor-engine"
-version = "0.2.0"
+version = "0.3.0"
 description = "Alkemio's generic Virtual Contributor engine"
 authors = ["Vladimir Aleksiev <vladimir@alkem.io>"]
 readme = "README.md"
@@ -13,9 +13,17 @@ python = "^3.11"
 aio-pika = "9.5.7"
 aiormq = "6.9.0"
 load-dotenv = "^0.1.0"
-chromadb-client = "^1.1.0"
+chromadb-client = "0.6.2"
 bcrypt = "^5.0.0"
 
+langchain-openai = "^0.3.35"
+langchain = "^0.3.27"
+langchain-mistralai = "^0.2.12"
+pydantic-settings = "^2.11.0"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.3.0"
+pyright = "^1.1.406"
 
 [build-system]
 requires = ["poetry-core"]
