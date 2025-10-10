@@ -8,7 +8,12 @@ class IngestionResult(Enum):
     SUCCESS = "success"
     FAILURE = "failure"
 
+
 class IngestWebsiteResult(Base):
-    timestamp: int = Field(default_factory=lambda: int(time() * 1000), alias="timestamp")
-    result: IngestionResult = Field(default=IngestionResult.SUCCESS, alias="result")
+    timestamp: int = Field(
+        default_factory=lambda: int(time() * 1000), alias="timestamp"
+    )
+    result: IngestionResult = Field(
+        default=IngestionResult.SUCCESS, alias="result"
+    )
     error: str = Field(default="", alias="error")

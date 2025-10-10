@@ -8,7 +8,9 @@ chromadb_client = chromadb.HttpClient(
     port=env.db_port,
     ssl=False,
     settings=Settings(
-        chroma_client_auth_provider="chromadb.auth.basic_authn.BasicAuthClientProvider",
+        chroma_client_auth_provider=(
+            "chromadb.auth.basic_authn.BasicAuthClientProvider"
+        ),
         chroma_client_auth_credentials=env.db_auth_credentials,
     ),
 )

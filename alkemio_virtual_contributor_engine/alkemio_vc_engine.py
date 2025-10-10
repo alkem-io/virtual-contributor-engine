@@ -28,7 +28,10 @@ class AlkemioVirtualContributorEngine:
         await self.rabbitmq.connect()
         if self.handler is None:
             raise ValueError(
-                "Message handler not defined. Ensure `engine.register_handler` with argument signature handler: `Callable[[Input], Coroutine[Any, Any, Response]]`  is called"
+                "Message handler not defined. Ensure "
+                "`engine.register_handler` with argument signature "
+                "handler: `Callable[[Input], Coroutine[Any, Any, "
+                "Response]]` is called"
             )
         await self.rabbitmq.consume(self.invoke_handler)
         try:
@@ -42,14 +45,21 @@ class AlkemioVirtualContributorEngine:
     async def publish(self, queue, message):
         await self.rabbitmq.publish_to_queue(queue, message)
 
-    async def consume(self, queue, callback, auto_delete=False, durable=True):
-        await self.rabbitmq.consume_queue(queue, callback, auto_delete, durable)
+    async def consume(
+        self, queue, callback, auto_delete=False, durable=True
+    ):
+        await self.rabbitmq.consume_queue(
+            queue, callback, auto_delete, durable
+        )
 
     async def invoke_handler(self, message: AbstractIncomingMessage):
         logger.info("New message received.")
         if self.handler is None:
             raise ValueError(
-                "Message handler not defined. Ensure `engine.register_handler` with argument signature handler: `Callable[[Input], Coroutine[Any, Any, Response]]`  is called"
+                "Message handler not defined. Ensure "
+                "`engine.register_handler` with argument signature "
+                "handler: `Callable[[Input], Coroutine[Any, Any, "
+                "Response]]` is called"
             )
 
         async with message.process():
@@ -68,7 +78,9 @@ class AlkemioVirtualContributorEngine:
                 logger.exception(f"Missing required field: {e}")
                 return
 
-            response: Response | IngestWebsiteResult = await self.handler(input)
+            response: Response | IngestWebsiteResult = (
+                await self.handler(input)
+            )
 
             result_message = {
                 "response": response.model_dump(),
@@ -86,8 +98,11 @@ class AlkemioVirtualContributorEngine:
     def register_handler(
         self,
         # the handler type should be as follows
-        # handler: Callable[[Input | IngestWebsite], Coroutine[Any, Any, Response]],
+        # handler: Callable[[Input | IngestWebsite],
+        #                   Coroutine[Any, Any, Response]],
         # for some reason it's not working hence the Any there -.-
-        handler: Callable[[Any], Coroutine[Any, Any, Response | IngestWebsiteResult]],
+        handler: Callable[
+            [Any], Coroutine[Any, Any, Response | IngestWebsiteResult]
+        ],
     ):
         self.handler = handler

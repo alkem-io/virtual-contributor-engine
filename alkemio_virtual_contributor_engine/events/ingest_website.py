@@ -1,6 +1,7 @@
 from pydantic import Field
 from .base import Base
 
+
 class IngestWebsite(Base):
     base_url: str = Field(alias="baseUrl")
     type: str = Field(alias="type")
