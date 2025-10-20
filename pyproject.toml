@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "alkemio-virtual-contributor-engine"
-version = "0.3.0"
+version = "0.3.1"
 description = "Alkemio's generic Virtual Contributor engine"
 authors = ["Vladimir Aleksiev <vladimir@alkem.io>"]
 readme = "README.md"

@@ -81,6 +81,7 @@ class Input(Base):
     persona_id: str = Field(alias="personaID")
     language: Optional[str] = Field("EN", alias="language")
     result_handler: ResultHandler = Field(alias="resultHandler")
+    prompt: Optional[List[str]] = Field(None, alias="prompt")
     prompt_graph: Optional[dict] = Field(
         None,
         alias="promptGraph",
