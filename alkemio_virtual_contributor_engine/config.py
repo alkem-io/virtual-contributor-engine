@@ -81,6 +81,12 @@ class Env(BaseSettings):
     mistral_key: Optional[str] = Field(
         default=None, alias="AZURE_MISTRAL_API_KEY"
     )
+    mistral_model_name: Optional[str] = Field(
+        default=None, alias="AZURE_MISTRAL_DEPLOYMENT_NAME"
+    )
+    mistral_api_version: Optional[str] = Field(
+        default=None, alias="AZURE_MISTRAL_API_VERSION"
+    )
 
 
 env = Env()  # type: ignore[call-arg]
