@@ -20,3 +20,10 @@ mistral_medium = AzureChatOpenAI(
     azure_deployment=env.mistral_model_name,
     api_version=env.mistral_api_version,
 )
+
+mistral_large = AzureChatOpenAI(
+    api_key=SecretStr(env.mistral_key) if env.mistral_key else None,
+    azure_endpoint=env.mistral_endpoint,
+    azure_deployment=env.mistral_large_model_name or env.mistral_model_name,
+    api_version=env.mistral_api_version,
+)
