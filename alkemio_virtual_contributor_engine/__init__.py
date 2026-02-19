@@ -1,6 +1,6 @@
 from .alkemio_vc_engine import AlkemioVirtualContributorEngine
 from .chromadb_client import chromadb_client
-from .models import mistral_medium, openai_embeddings
+from .models import mistral_medium, mistral_large, openai_embeddings
 from .rabbitmq import RabbitMQ
 from .setup_logger import setup_logger
 from .utils import (
@@ -14,6 +14,7 @@ from .utils import (
 from .events import (
     Input,
     IngestWebsite,
+    SummarizationModel,
     Response,
     IngestWebsiteResult,
     HistoryItem,
@@ -27,6 +28,7 @@ __all__ = [
     "setup_logger",
     "chromadb_client",
     "mistral_medium",
+    "mistral_large",
     "openai_embeddings",
     "get_language_by_code",
     "combine_documents",
@@ -35,6 +37,7 @@ __all__ = [
     "history_as_text",
     "Input",
     "IngestWebsite",
+    "SummarizationModel",
     "Response",
     "IngestWebsiteResult",
     "HistoryItem",
