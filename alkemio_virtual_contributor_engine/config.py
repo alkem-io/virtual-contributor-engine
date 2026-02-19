@@ -84,6 +84,9 @@ class Env(BaseSettings):
     mistral_model_name: Optional[str] = Field(
         default=None, alias="AZURE_MISTRAL_DEPLOYMENT_NAME"
     )
+    mistral_large_model_name: Optional[str] = Field(
+        default=None, alias="AZURE_MISTRAL_LARGE_DEPLOYMENT_NAME"
+    )
     mistral_api_version: Optional[str] = Field(
         default=None, alias="AZURE_MISTRAL_API_VERSION"
     )
