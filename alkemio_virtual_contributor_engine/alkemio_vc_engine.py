@@ -66,6 +66,7 @@ class AlkemioVirtualContributorEngine:
             try:
                 body = json.loads(message.body.decode())
                 event_type = body.get("eventType")
+                logger.debug(f"Invocation message: {body}")
                 if event_type == "IngestWebsite":
                     input = IngestWebsite(**body)
                 else:

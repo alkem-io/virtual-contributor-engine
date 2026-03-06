@@ -49,8 +49,8 @@ class Env(BaseSettings):
     rabbitmq_result_routing_key: str = Field(
         ..., alias="RABBITMQ_RESULT_ROUTING_KEY"
     )
-    db_host: str = Field(..., alias="VECTOR_DB_HOST")
-    db_auth_credentials: str = Field(..., alias="VECTOR_DB_CREDENTIALS")
+    db_host: Optional[str] = Field(default=None, alias="VECTOR_DB_HOST")
+    db_auth_credentials: Optional[str] = Field(default=None, alias="VECTOR_DB_CREDENTIALS")
 
     # Optional fields with defaults
     db_port: int = Field(default=8765, alias="VECTOR_DB_PORT")
@@ -90,6 +90,7 @@ class Env(BaseSettings):
     mistral_api_version: Optional[str] = Field(
         default=None, alias="AZURE_MISTRAL_API_VERSION"
     )
+
 
 
 env = Env()  # type: ignore[call-arg]
