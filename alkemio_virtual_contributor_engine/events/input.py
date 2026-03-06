@@ -46,7 +46,7 @@ class HistoryItem(Base):
 
 class RoomDetails(Base):
     room_id: str = Field(alias="roomID")
-    actor_id: str = Field(alias="actorId")
+    actor_id: str = Field(alias="actorID")
     thread_id: Optional[str] = Field(None, alias="threadID")
     vc_interaction_id: Optional[str] = Field(
         None, alias="vcInteractionID"
