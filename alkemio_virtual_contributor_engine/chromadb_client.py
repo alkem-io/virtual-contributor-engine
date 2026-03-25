@@ -13,9 +13,10 @@ if env.db_host and env.db_auth_credentials:
         ssl=False,
         settings=Settings(
             chroma_client_auth_provider=(
-                "chromadb.auth.basic_authn.BasicAuthClientProvider"
+                "chromadb.auth.token_authn.TokenAuthClientProvider"
             ),
             chroma_client_auth_credentials=env.db_auth_credentials,
+            chroma_auth_token_transport_header="Authorization",
         ),
     )
 else:
