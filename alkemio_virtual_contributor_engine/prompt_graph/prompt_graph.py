@@ -175,9 +175,9 @@ class PromptGraph(BaseModel):
 
         # Add edges
         for edge in self.edges:
-            if edge.from_node == "START":
+            if edge.from_node == self.start_node:
                 compiled_graph.add_edge(START, edge.to_node)
-            elif edge.to_node == "END":
+            elif edge.to_node == self.end_node:
                 compiled_graph.add_edge(edge.from_node, END)
             else:
                 compiled_graph.add_edge(edge.from_node, edge.to_node)

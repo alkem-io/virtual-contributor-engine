@@ -1,5 +1,6 @@
+import copy
+from typing import Any, Dict, Type
 from pydantic import BaseModel
-from typing import Any, Dict
 from json_schema_to_pydantic import create_model
 
 
@@ -61,9 +62,10 @@ def _transform_schema(obj: Any) -> None:
             _transform_schema(item)
 
 
-def parse_json_graph(data: Dict[str, Any]) -> BaseModel:
-    _transform_schema(data)
-    model_cls = create_model(data, root_schema=data)
+def parse_json_graph(data: Dict[str, Any]) -> Type[BaseModel]:
+    schema = copy.deepcopy(data)
+    _transform_schema(schema)
+    model_cls = create_model(schema, root_schema=schema)
     return model_cls
 
 

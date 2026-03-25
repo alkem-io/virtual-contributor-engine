@@ -114,7 +114,14 @@ def ingest_documents(
         batch = documents[batch_index: batch_index + batch_size]
         texts = [doc.page_content for doc in batch]
         metadatas = [doc.metadata for doc in batch]
-        ids = [doc.metadata["documentId"] for doc in batch]
+        ids = []
+        for i, doc in enumerate(batch):
+            doc_id = doc.metadata.get("documentId")
+            if not doc_id:
+                raise ValueError(
+                    f"Document at index {batch_index + i} missing required 'documentId' in metadata"
+                )
+            ids.append(doc_id)
 
         logger.info(f"Embedding {len(texts)} documents")
         batch_embeddings = embeddings.embed_documents(texts)
