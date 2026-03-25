@@ -164,8 +164,14 @@ class PromptGraph(BaseModel):
                         result = chain.invoke(input_dict)
                     except Exception as e:
                         duration = time.time() - start_time
-                        logger.error(f"LLM chain for node '{node.name}' failed after {duration:.2f}s: {e}")
-                        raise RuntimeError(f"Node '{node.name}' chain invocation failed: {e}") from e
+                        logger.error(
+                            f"LLM chain for node '{node.name}' "
+                            f"failed after {duration:.2f}s: {e}"
+                        )
+                        raise RuntimeError(
+                            f"Node '{node.name}' chain invocation "
+                            f"failed: {e}"
+                        ) from e
 
                     duration = time.time() - start_time
                     logger.debug(f"LLM chain for node '{node.name}' completed in {duration:.2f}s")

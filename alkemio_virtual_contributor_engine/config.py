@@ -1,5 +1,5 @@
 from typing import Literal, Optional
-from pydantic import Field, ConfigDict
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
 
@@ -77,7 +77,6 @@ class Env(BaseSettings):
     mistral_small_model_name: Optional[str] = Field(
         default=None, alias="MISTRAL_SMALL_MODEL_NAME"
     )
-
 
 
 env = Env()  # type: ignore[call-arg]

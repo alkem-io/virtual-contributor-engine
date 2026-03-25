@@ -26,6 +26,13 @@ json-schema-to-pydantic = "^0.4.3"
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.3.0"
 pyright = "^1.1.406"
+pytest = "^8.0.0"
+pytest-asyncio = "^0.24.0"
+pytest-cov = "^6.0.0"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
 
 [build-system]
 requires = ["poetry-core"]
