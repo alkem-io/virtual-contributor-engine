@@ -77,10 +77,8 @@ class PromptGraph(BaseModel):
             edges=edges,
             start=data.get("start", "START"),
             end=data.get("end", "END"),
+            state_model=state_model,
         )
-
-        # Set state model directly (after initialization)
-        graph.state_model = state_model
         return graph
 
     def __repr__(self) -> str:
@@ -122,6 +120,11 @@ class PromptGraph(BaseModel):
         if special_nodes is None:
             special_nodes = {}
 
+        if self.state_model is None:
+            raise ValueError(
+                "Cannot compile graph without a state model. "
+                "Provide a 'state' schema in the graph definition."
+            )
         compiled_graph = StateGraph(self.state_model)
 
         # Register nodes
