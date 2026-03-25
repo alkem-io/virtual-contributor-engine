@@ -1,6 +1,6 @@
 """Node class for representing execution nodes in the prompt graph."""
 
-from typing import Any, Callable, Dict, List, Optional, Type
+from typing import Any, Dict, List, Optional, Type
 from pydantic import BaseModel, Field, ConfigDict
 from .json_graph_parser import parse_json_graph
 
@@ -84,21 +84,6 @@ class Node(BaseModel):
                 f"Prompt template for node '{self.name}' requires variable "
                 f"{e} which was not provided"
             )
-
-    def execute(
-        self,
-        state: BaseModel,
-        llm_function: Optional[Callable[[str], Dict[str, Any]]] = None
-    ) -> BaseModel:
-        """Execute this node with the given state."""
-        formatted_prompt = self.format_prompt(state)
-        if llm_function is None:
-            raise NotImplementedError(
-                f"Node '{self.name}' requires an llm_function to execute. "
-                "Provide a callable that takes a prompt and returns output dict."
-            )
-        output_data = llm_function(formatted_prompt)
-        return self.validate_output(output_data)
 
     def __repr__(self) -> str:
         inputs = ", ".join(self.input_variables) if self.input_variables else "none"

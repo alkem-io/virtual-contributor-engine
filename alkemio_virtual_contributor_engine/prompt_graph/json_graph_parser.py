@@ -1,7 +1,10 @@
 import copy
+import logging
 from typing import Any, Dict, Type
 from pydantic import BaseModel
 from json_schema_to_pydantic import create_model
+
+logger = logging.getLogger(__name__)
 
 
 def _transform_schema(obj: Any) -> None:
@@ -50,7 +53,7 @@ def _transform_schema(obj: Any) -> None:
         ):
             items = obj.get("items")
             if items is None:
-                print("WARNING: Array type missing 'items' schema:", obj)
+                logger.warning("Array type missing 'items' schema: %s", obj)
             if items is not None:
                 _transform_schema(items)
         # Recurse through remaining values

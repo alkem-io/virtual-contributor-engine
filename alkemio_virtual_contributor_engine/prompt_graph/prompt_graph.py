@@ -153,8 +153,9 @@ class PromptGraph(BaseModel):
 
                     input_dict = {var: getattr(state, var) for var in node.input_variables}
 
-                    compiled_prompt = prompt.format(**input_dict)
-                    logger.debug(f"\n{node.name}: {compiled_prompt}\n")
+                    if logger.isEnabledFor(logging.DEBUG):
+                        compiled_prompt = prompt.format(**input_dict)
+                        logger.debug(f"\n{node.name}: {compiled_prompt}\n")
 
                     start_time = time.time()
 
