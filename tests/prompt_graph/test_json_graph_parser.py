@@ -1,3 +1,5 @@
+import copy
+
 from pydantic import BaseModel
 
 from alkemio_virtual_contributor_engine.prompt_graph.json_graph_parser import (
@@ -115,6 +117,6 @@ def test_parse_json_graph_does_not_mutate_input():
             {"name": "field", "type": "string", "optional": True},
         ],
     }
-    original_props = list(schema["properties"])
+    original_props = copy.deepcopy(schema["properties"])
     parse_json_graph(schema)
     assert schema["properties"] == original_props

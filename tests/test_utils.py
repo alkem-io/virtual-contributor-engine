@@ -22,7 +22,7 @@ def test_get_language_by_code_known():
     assert get_language_by_code("ES") == "Spanish"
     assert get_language_by_code("NL") == "Dutch"
     assert get_language_by_code("BG") == "Bulgarian"
-    assert get_language_by_code("UA") == "Ukranian"
+    assert get_language_by_code("UA") == "Ukrainian"
 
 
 def test_get_language_by_code_unknown():
