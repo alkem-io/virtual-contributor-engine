@@ -23,7 +23,7 @@ poetry run pyright alkemio_virtual_contributor_engine/
 
 ## Architecture
 
-```
+```text
 alkemio_virtual_contributor_engine/
 ├── alkemio_vc_engine.py     # Main engine: RabbitMQ message loop + handler dispatch
 ├── config.py                # Pydantic-settings env var config

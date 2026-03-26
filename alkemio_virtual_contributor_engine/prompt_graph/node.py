@@ -1,5 +1,6 @@
 """Node class for representing execution nodes in the prompt graph."""
 
+import copy
 from typing import Any, Dict, List, Optional, Type
 from pydantic import BaseModel, Field, ConfigDict
 from .json_graph_parser import parse_json_graph
@@ -55,7 +56,7 @@ class Node(BaseModel):
 
     def _build_output_model(self) -> Type[BaseModel]:
         """Build a Pydantic model from the output schema."""
-        schema = dict(self.output_schema)
+        schema = copy.deepcopy(self.output_schema)
         schema.setdefault("title", f"{self.name.title().replace('_', '')}Output")
         output_model = parse_json_graph(schema)
         return output_model

@@ -24,10 +24,21 @@ def _transform_schema(obj: Any) -> None:
             new_props: Dict[str, Any] = {}
             for item in obj["properties"]:  # type: ignore[index]
                 if not isinstance(item, dict):
+                    logger.warning(
+                        "Skipping non-dict property entry: %s", item
+                    )
                     continue
                 name = item.get("name")
                 if not isinstance(name, str):
-                    continue  # Skip malformed entries
+                    logger.warning(
+                        "Skipping property with missing/invalid name: %s",
+                        item,
+                    )
+                    continue
+                if name in new_props:
+                    raise ValueError(
+                        f"Duplicate property name: '{name}'"
+                    )
                 # Prepare property copy
                 prop_copy = dict(item)
                 prop_copy.pop("name", None)

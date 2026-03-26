@@ -96,6 +96,8 @@ def ingest_documents(
         raise RuntimeError("ChromaDB client not initialized — cannot ingest documents")
     if not embeddings:
         raise RuntimeError("Embeddings model not initialized — cannot ingest documents")
+    if batch_size < 1:
+        raise ValueError("batch_size must be at least 1")
 
     try:
         chromadb_client.delete_collection(collection_name)

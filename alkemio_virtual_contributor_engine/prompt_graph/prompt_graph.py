@@ -61,6 +61,8 @@ class PromptGraph(BaseModel):
         nodes_dict = {}
         for node_data in data.get("nodes", []):
             node = Node(**node_data)
+            if node.name in nodes_dict:
+                raise ValueError(f"Duplicate node name: '{node.name}'")
             nodes_dict[node.name] = node
 
         # Parse edges
