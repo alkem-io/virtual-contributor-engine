@@ -67,7 +67,7 @@ class Input(Base):
     )
     user_id: str = Field(alias="userID")
     message: str = Field(alias="message")
-    body_of_knowledge_id: str = Field(alias="bodyOfKnowledgeID")
+    body_of_knowledge_id: Optional[str] = Field(None, alias="bodyOfKnowledgeID")
     context_id: str = Field("", alias="contextID")
     history: List[HistoryItem] = Field(alias="history")
     external_metadata: Optional[ExternalMetadata] = Field(
