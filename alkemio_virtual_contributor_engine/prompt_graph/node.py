@@ -83,7 +83,7 @@ class Node(BaseModel):
             raise KeyError(
                 f"Prompt template for node '{self.name}' requires variable "
                 f"{e} which was not provided"
-            )
+            ) from e
 
     def __repr__(self) -> str:
         inputs = ", ".join(self.input_variables) if self.input_variables else "none"

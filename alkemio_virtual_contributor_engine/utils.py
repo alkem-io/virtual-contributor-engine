@@ -13,7 +13,7 @@ language_mapping = {
     "ES": "Spanish",
     "NL": "Dutch",
     "BG": "Bulgarian",
-    "UA": "Ukranian",
+    "UA": "Ukrainian",
 }
 
 

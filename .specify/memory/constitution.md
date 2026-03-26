@@ -1,24 +1,17 @@
 <!--
 Sync Impact Report
 ===================
-- Version change: N/A (initial) → 1.0.0
-- Added principles:
-  - I. Async-First Event-Driven Architecture
-  - II. Graceful Degradation
-  - III. Configuration-Driven Design
-  - IV. Minimal Public API Surface
-  - V. Observability
-- Added sections:
-  - Technology Stack & Constraints
-  - Development Workflow
-  - Governance
-- Removed sections: none (initial constitution)
+- Version change: 1.0.0 → 1.1.0 (MINOR: materially expanded testing guidance)
+- Modified sections:
+  - Development Workflow > Testing: replaced placeholder guidance with
+    mandatory pytest, 90% coverage threshold, and no-external-services rule
+- Added sections: none
+- Removed sections: none
 - Templates requiring updates:
   - `.specify/templates/plan-template.md` — ✅ no updates needed
   - `.specify/templates/spec-template.md` — ✅ no updates needed
   - `.specify/templates/tasks-template.md` — ✅ no updates needed
-- Follow-up TODOs:
-  - RATIFICATION_DATE set to today (first adoption)
+- Follow-up TODOs: none
 -->
 
 # Alkemio Virtual Contributor Engine Constitution
@@ -115,8 +108,10 @@ enables aggregation in centralised logging platforms.
   PATCH for bug fixes. Version is set in `pyproject.toml`.
 - **Commit messages**: Use conventional commit prefixes
   (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`).
-- **Testing**: No test suite exists yet. When tests are added
-  they SHOULD use `pytest` with async support (`pytest-asyncio`).
+- **Testing**: Tests MUST use `pytest` with `pytest-asyncio` for
+  async support. Code coverage MUST be at least 90% and is
+  enforced in CI. Tests MUST NOT require external services or
+  real API keys.
 
 ## Governance
 
@@ -133,4 +128,4 @@ and code reviews MUST verify compliance with these principles.
    (MAJOR for principle removals/redefinitions, MINOR for new
    principles or material expansions, PATCH for clarifications).
 
-**Version**: 1.0.0 | **Ratified**: 2026-03-25 | **Last Amended**: 2026-03-25
+**Version**: 1.1.0 | **Ratified**: 2026-03-25 | **Last Amended**: 2026-03-25

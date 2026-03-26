@@ -7,9 +7,11 @@ from .config import env
 logger = logging.getLogger(__name__)
 
 try:
-    embeddings = OpenAIEmbeddings(
-        openai_api_key=SecretStr(env.embeddings_api_key) if env.embeddings_api_key else None,
-        openai_api_base=env.embeddings_endpoint,
+    embeddings = OpenAIEmbeddings(  # pyright: ignore[reportCallIssue]
+        openai_api_key=(  # pyright: ignore[reportCallIssue]
+            SecretStr(env.embeddings_api_key) if env.embeddings_api_key else None
+        ),
+        openai_api_base=env.embeddings_endpoint,  # pyright: ignore[reportCallIssue]
         model=env.embeddings_model_name,
         check_embedding_ctx_length=False,
     )
@@ -18,9 +20,9 @@ except Exception as e:
     embeddings = None
 
 try:
-    mistral_small = ChatMistralAI(
+    mistral_small = ChatMistralAI(  # pyright: ignore[reportCallIssue]
         api_key=SecretStr(env.mistral_api_key) if env.mistral_api_key else None,
-        model=env.mistral_small_model_name,
+        model=env.mistral_small_model_name,  # pyright: ignore[reportCallIssue]
     )
 except Exception as e:
     logger.warning(f"Mistral small model not initialized: {e}")
