@@ -1,5 +1,5 @@
 from typing import Literal, Optional
-from pydantic import Field, ConfigDict
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
 
@@ -7,7 +7,7 @@ load_dotenv()
 
 
 class Env(BaseSettings):
-    """Pydantic configuration class for RabbitMQ environment variables.
+    """Pydantic configuration class for environment variables.
 
     Attributes:
         rabbitmq_host: The RabbitMQ server host
@@ -20,13 +20,12 @@ class Env(BaseSettings):
         db_host: The vector database host
         db_port: The vector database port
         db_auth_credentials: The vector database authentication credentials
-        openai_key: The OpenAI API key
-        openai_api_version: The OpenAI API version
+        embeddings_api_key: The embeddings API key
+        embeddings_endpoint: The embeddings API endpoint
         embeddings_model_name: The embeddings model name
-        mistral_endpoint: The Mistral API endpoint
-        mistral_key: The Mistral API key
+        mistral_api_key: The Mistral platform API key
+        mistral_small_model_name: The Mistral small model name
         log_level: The logging level
-        local_path: The local path
     """
 
     model_config = SettingsConfigDict(
@@ -54,43 +53,30 @@ class Env(BaseSettings):
 
     # Optional fields with defaults
     db_port: int = Field(default=8765, alias="VECTOR_DB_PORT")
-    local_path: str = Field(default="./", alias="LOCAL_PATH")
     log_level: Literal[
         "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
     ] = Field(
         default="INFO", alias="LOG_LEVEL"
     )
 
-    # Optional fields without defaults in original (setting to None)
-    openai_key: Optional[str] = Field(
-        default=None, alias="AZURE_OPENAI_API_KEY"
+    # Embeddings configuration
+    embeddings_api_key: Optional[str] = Field(
+        default=None, alias="EMBEDDINGS_API_KEY"
     )
-    openai_api_version: Optional[str] = Field(
-        default=None, alias="OPENAI_API_VERSION"
-    )
-    openai_endpoint: Optional[str] = Field(
-        default=None, alias="AZURE_OPENAI_ENDPOINT"
+    embeddings_endpoint: Optional[str] = Field(
+        default=None, alias="EMBEDDINGS_ENDPOINT"
     )
     embeddings_model_name: Optional[str] = Field(
-        default=None, alias="EMBEDDINGS_DEPLOYMENT_NAME"
+        default=None, alias="EMBEDDINGS_MODEL_NAME"
     )
 
-    mistral_endpoint: Optional[str] = Field(
-        default=None, alias="AZURE_MISTRAL_ENDPOINT"
+    # Mistral platform configuration
+    mistral_api_key: Optional[str] = Field(
+        default=None, alias="MISTRAL_API_KEY"
     )
-    mistral_key: Optional[str] = Field(
-        default=None, alias="AZURE_MISTRAL_API_KEY"
+    mistral_small_model_name: Optional[str] = Field(
+        default=None, alias="MISTRAL_SMALL_MODEL_NAME"
     )
-    mistral_model_name: Optional[str] = Field(
-        default=None, alias="AZURE_MISTRAL_DEPLOYMENT_NAME"
-    )
-    mistral_large_model_name: Optional[str] = Field(
-        default=None, alias="AZURE_MISTRAL_LARGE_DEPLOYMENT_NAME"
-    )
-    mistral_api_version: Optional[str] = Field(
-        default=None, alias="AZURE_MISTRAL_API_VERSION"
-    )
-
 
 
 env = Env()  # type: ignore[call-arg]

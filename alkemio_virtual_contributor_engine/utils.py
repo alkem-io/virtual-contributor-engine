@@ -13,7 +13,7 @@ language_mapping = {
     "ES": "Spanish",
     "NL": "Dutch",
     "BG": "Bulgarian",
-    "UA": "Ukranian",
+    "UA": "Ukrainian",
 }
 
 
@@ -27,7 +27,18 @@ def get_language_by_code(language_code):
 
 
 def combine_documents(docs, document_separator="\n\n"):
-    return document_separator.join([doc.page_content for doc in docs])
+    """Combine a list of documents into a single string.
+
+    Accepts either LangChain Document objects (with .page_content)
+    or plain strings.
+    """
+    parts = []
+    for doc in docs:
+        if isinstance(doc, str):
+            parts.append(doc)
+        else:
+            parts.append(doc.page_content)
+    return document_separator.join(parts)
 
 
 def clear_tags(message):
@@ -42,3 +53,22 @@ def entry_as_string(entry: HistoryItem):
 
 def history_as_text(history: list[HistoryItem]):
     return "\n".join(list(map(entry_as_string, history)))
+
+
+def history_as_conversation(history: list[HistoryItem]):
+    return "\n".join(list(map(
+        lambda message: f"{message.role}: {clear_tags(message.content)}",
+        history
+    )))
+
+
+def history_as_dict(history: list[HistoryItem]):
+    return list(
+        map(
+            lambda history_item: {
+                "role": history_item.role,
+                "content": clear_tags(history_item.content)
+            },
+            history
+        )
+    )

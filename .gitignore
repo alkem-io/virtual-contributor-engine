@@ -1,8 +1,14 @@
 .env
-__pycache__/*
-**/**/__pycache__
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
 docker-compose-local.yaml
 .DS_Store
 *.log
-dist/
 .claude/
