@@ -1,5 +1,6 @@
 import copy
 
+import pytest
 from pydantic import BaseModel
 
 from alkemio_virtual_contributor_engine.prompt_graph.json_graph_parser import (
@@ -68,20 +69,43 @@ def test_transform_schema_array_items():
     assert "value" in items_props
 
 
-def test_transform_schema_skips_malformed():
+def test_transform_schema_rejects_non_dict_property():
+    schema = {
+        "type": "object",
+        "properties": ["not a dict"],
+    }
+    with pytest.raises(ValueError, match="must be a dict"):
+        _transform_schema(schema)
+
+
+def test_transform_schema_rejects_missing_name():
+    schema = {
+        "type": "object",
+        "properties": [{"no_name_key": "value"}],
+    }
+    with pytest.raises(ValueError, match="missing required"):
+        _transform_schema(schema)
+
+
+def test_transform_schema_rejects_non_string_name():
+    schema = {
+        "type": "object",
+        "properties": [{"name": 123, "type": "string"}],
+    }
+    with pytest.raises(ValueError, match="missing required"):
+        _transform_schema(schema)
+
+
+def test_transform_schema_rejects_duplicate_names():
     schema = {
         "type": "object",
         "properties": [
-            "not a dict",
-            {"no_name_key": "value"},
-            {"name": 123, "type": "string"},
-            {"name": "valid", "type": "string"},
+            {"name": "field", "type": "string"},
+            {"name": "field", "type": "integer"},
         ],
     }
-    _transform_schema(schema)
-    assert isinstance(schema["properties"], dict)
-    assert "valid" in schema["properties"]
-    assert len(schema["properties"]) == 1
+    with pytest.raises(ValueError, match="Duplicate property name"):
+        _transform_schema(schema)
 
 
 def test_parse_json_graph_produces_model():

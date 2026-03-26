@@ -134,13 +134,13 @@ As a consuming service developer, I want a cleaner environment variable configur
 - **SC-002**: A multi-step AI workflow defined as JSON can be compiled and executed end-to-end, producing validated structured output.
 - **SC-003**: Documents can be ingested into and queried from a vector database using the library's utility functions without writing any embedding logic in consuming services.
 - **SC-004**: The library initializes successfully when only a subset of external service credentials are provided, with clear warning logs for unavailable services.
-- **SC-005**: All consuming services can migrate by updating environment variable names and dependency version, with no code changes beyond import names.
+- **SC-005**: All consuming services can migrate by updating environment variable names and dependency version, with no code changes beyond import names. See the [migration guide](./quickstart.md) for step-by-step instructions.
 
 ## Assumptions
 
 - Consuming services have access to the Mistral platform API (not only Azure-hosted Mistral).
 - The vector database deployment supports token-based authentication (replacing basic auth).
 - All consuming services run Python 3.12 or higher.
-- The `mistral_medium` and `mistral_large` model exports are no longer needed; consuming services have been notified of the switch to `mistral_small`.
+- The `mistral_medium` and `mistral_large` model exports are replaced by `mistral_small`. Consuming services must update their imports per the [migration guide](./quickstart.md).
 - Consuming services that used `openai_embeddings` will migrate to the new `embeddings` export name.
 - This is a breaking change release (0.7.0 to 0.8.0) and consuming services accept the migration cost.

@@ -24,17 +24,16 @@ def _transform_schema(obj: Any) -> None:
             new_props: Dict[str, Any] = {}
             for item in obj["properties"]:  # type: ignore[index]
                 if not isinstance(item, dict):
-                    logger.warning(
-                        "Skipping non-dict property entry: %s", item
+                    raise ValueError(
+                        f"Property entry must be a dict, "
+                        f"got {type(item).__name__}: {item}"
                     )
-                    continue
                 name = item.get("name")
                 if not isinstance(name, str):
-                    logger.warning(
-                        "Skipping property with missing/invalid name: %s",
-                        item,
+                    raise ValueError(
+                        f"Property entry missing required "
+                        f"'name' string field: {item}"
                     )
-                    continue
                 if name in new_props:
                     raise ValueError(
                         f"Duplicate property name: '{name}'"
